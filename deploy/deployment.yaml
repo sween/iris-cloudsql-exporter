@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: iris-cloudsql-exporter-exporter-deployment
+  labels:
+    app: iris-cloudsql-exporter-exporter
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: iris-cloudsql-exporter-exporter
+  template:
+    metadata:
+      labels:
+        app: iris-cloudsql-exporter-exporter
+    spec:
+      containers:
+      - name: iris-cloudsql-exporter-exporter
+        image: sween/iris-cloudsql-exporter-exporter:latest
+        ports:
+        - containerPort: 5000
+        env:
+        - name: RIVIAN_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: rivian-user-pass
+              key: rivian_password
+        - name: RIVIAN_USERNAME
+          valueFrom:
+            secretKeyRef:
+              name: rivian-user-pass
+              key: rivian_username
