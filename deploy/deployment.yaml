@@ -1,0 +1,75 @@
+apiVersion: apps/v1
+kind: Deployment 
+metadata:
+  name: iris-cloudsql-exporter
+  labels:
+    app: iris-cloudsql-exporter
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: iris-cloudsql-exporter
+  template:
+    metadata:
+      labels:
+        app: iris-cloudsql-exporter
+    spec:
+      containers:
+      - name: iris-cloudsql-exporter
+        image: sween/iris-cloudsql-exporter:latest
+        ports:
+        - containerPort: 5000
+        env:
+        - name: "GOOGLE_APPLICATION_CREDENTIALS"
+          value: "/gmp/key.json"
+        - name: IRIS_CLOUDSQL_USERPOOLID
+          valueFrom:
+            secretKeyRef:
+              name: iris-cloudsql
+              key: userpoolid
+        - name: IRIS_CLOUDSQL_CLIENTID
+          valueFrom:
+            secretKeyRef:
+              name: iris-cloudsql
+              key: clientid
+        - name: IRIS_CLOUDSQL_USER
+          valueFrom:
+            secretKeyRef:
+              name: iris-cloudsql
+              key: user
+        - name: IRIS_CLOUDSQL_PASS
+          valueFrom:
+            secretKeyRef:
+              name: iris-cloudsql
+              key: pass
+        - name: IRIS_CLOUDSQL_API
+          valueFrom:
+            secretKeyRef:
+              name: iris-cloudsql
+              key: api
+        - name: IRIS_CLOUDSQL_DEPLOYMENTID
+          valueFrom:
+            secretKeyRef:
+              name: iris-cloudsql
+              key: deploymentid
+      - name: otel-collector
+        image: otel/opentelemetry-collector-contrib:0.92.0
+        args:
+        - --config
+        - /etc/otel/config.yaml
+        volumeMounts:
+        - mountPath: /etc/otel/
+          name: otel-config
+        - name: gmp-sa
+          mountPath: /gmp
+          readOnly: true
+        env:
+        - name: "GOOGLE_APPLICATION_CREDENTIALS"
+          value: "/gmp/key.json"
+      volumes:
+      - name: gmp-sa
+        secret:
+          secretName: gmp-test-sa
+      - name: otel-config
+        configMap:
+          name: otel-config

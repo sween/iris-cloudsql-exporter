@@ -20,6 +20,8 @@ class IRISCloudSQLExporter(object):
         # Requests fodder
         url = self.portal_api
         deploymentid = self.portal_deploymentid
+        print(url)
+        print(deploymentid)
 
         headers = {
             'Authorization': self.access_token, # needs to be refresh_token, eventually
@@ -53,6 +55,10 @@ class IRISCloudSQLExporter(object):
             username = os.environ['IRIS_CLOUDSQL_USER']
             password = os.environ['IRIS_CLOUDSQL_PASS']
             clientid = os.environ['IRIS_CLOUDSQL_CLIENTID'] # isc aud 
+            print(user_pool_id)
+            print(username)
+            print(password)
+            print(clientid)
             
             try:
                 u = Cognito(
@@ -77,4 +83,4 @@ if __name__ == '__main__':
         REGISTRY.collect()
         print("Polling IRIS CloudSQL API for metrics data....")
         #looped e loop
-        time.sleep(30)
+        time.sleep(120)
