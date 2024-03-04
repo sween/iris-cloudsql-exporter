@@ -10,31 +10,6 @@ receivers:
                 - targets: ['192.168.1.92:5000']
         metrics_path: /
 
-#processors:
-#  resource:
-#    attributes:
-#    - key: "cluster"
-#      value: "CLUSTER_NAME"
-#      action: upsert
-#    - key: "namespace"
-#      value: "NAMESPACE_NAME"
-#      action: upsert
-#    - key: "location"
-#      value: "REGION"
-#      action: upsert
-
-  #batch:
-    # batch metrics before sending to reduce API usage
-    #send_batch_max_size: 200
-    #send_batch_size: 200
-    #timeout: 5s
-
-  #memory_limiter:
-    # drop metrics if memory usage gets too high
-    #check_interval: 1s
-    #limit_percentage: 65
-    #spike_limit_percentage: 20
-
 exporters:
   googlemanagedprometheus:
     project: "pidtoo-fhir"
