@@ -2,38 +2,26 @@ receivers:
   prometheus:
     config:
       scrape_configs:
-      - job_name: 'IRIS_CLOUDSQL'
-        kubernetes_sd_configs:
-        - role: pod
-        relabel_configs:
-        - source_labels: [__meta_kubernetes_pod_label_app_kubernetes_io_name]
-          action: keep
-          regex: prom-example
-        - source_labels: [__meta_kubernetes_pod_annotation_prometheus_io_path]
-          action: replace
-          target_label: __metrics_path__
-          regex: (.+)
-        - source_labels: [__address__, __meta_kubernetes_pod_annotation_prometheus_io_port]
-          action: replace
-          regex: (.+):(?:\d+);(\d+)
-          replacement: $1:$2
-          target_label: __address__
-        - action: labelmap
-          regex: __meta_kubernetes_pod_label_(.+)
+      - job_name: 'IRIS CloudSQL'
+          # Override the global default and scrape targets from this job every 5 seconds.
+        scrape_interval: 30s
+        scrape_timeout: 30s
+        static_configs:
+                - targets: ['192.168.1.92:5000']
+        metrics_path: /
 
-processors:
-  resource:
-    attributes:
-    - key: "cluster"
-      value: "CLUSTER_NAME"
-      action: upsert
-    - key: "namespace"
-      value: "NAMESPACE_NAME"
-      action: upsert
-    - key: "location"
-      value: "REGION"
-      action: upsert
-
+#processors:
+#  resource:
+#    attributes:
+#    - key: "cluster"
+#      value: "CLUSTER_NAME"
+#      action: upsert
+#    - key: "namespace"
+#      value: "NAMESPACE_NAME"
+#      action: upsert
+#    - key: "location"
+#      value: "REGION"
+#      action: upsert
 
   #batch:
     # batch metrics before sending to reduce API usage
@@ -49,7 +37,7 @@ processors:
 
 exporters:
   googlemanagedprometheus:
-    project: "PROJECT_ID"
+    project: "pidtoo-fhir"
 
 service:
   pipelines:

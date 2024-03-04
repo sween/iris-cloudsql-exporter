@@ -49,10 +49,10 @@ class IRISCloudSQLExporter(object):
     def get_access_token(self):
         
         try:
-            user_pool_id = os.environ['IRIS_CLOUDSQL_USERPOOLID'] # isc iss us-east-2_SULduxtdi https://cognito-idp.us-east-2.amazonaws.com/us-east-2_SULduxtdi
+            user_pool_id = os.environ['IRIS_CLOUDSQL_USERPOOLID'] # isc iss 
             username = os.environ['IRIS_CLOUDSQL_USER']
             password = os.environ['IRIS_CLOUDSQL_PASS']
-            clientid = os.environ['IRIS_CLOUDSQL_CLIENTID'] # isc aud 76d6suqpq97v4fnvbg5oemieo9
+            clientid = os.environ['IRIS_CLOUDSQL_CLIENTID'] # isc aud 
             
             try:
                 u = Cognito(
